@@ -6,15 +6,30 @@ export const Footer = () => {
       <Box ml="auto" px="20%">
         <Text pb="5px">Visit our:</Text>
         <Flex direction="row" gap="10px">
-          <Image src="/facebook.svg" width="20px" height="20px" />
+          <Image
+            src="/facebook.svg"
+            alt="facebook icon"
+            width="20px"
+            height="20px"
+          />
           <Text>Facebook</Text>
         </Flex>
         <Flex direction="row" gap="10px">
-          <Image src="/instagram.svg" width="20px" height="20px" />
+          <Image
+            src="/instagram.svg"
+            alt="instagram icon"
+            width="20px"
+            height="20px"
+          />
           <Text>Instagram</Text>
         </Flex>
         <Flex direction="row" gap="10px">
-          <Image src="/twitter.svg" width="20px" height="20px" />
+          <Image
+            src="/twitter.svg"
+            alt="twitter icon"
+            width="20px"
+            height="20px"
+          />
           <Text>Twitter</Text>
         </Flex>
       </Box>

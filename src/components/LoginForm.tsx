@@ -128,7 +128,7 @@ export const LoginForm = ({ setIsLogin }: LoginFormProps) => {
                 cursor="pointer"
                 onClick={() => setIsLogin(false)}
               >
-                DON'T HAVE AN ACCOUNT YET? SIGN UP!
+                DON&apos;T HAVE AN ACCOUNT YET? SIGN UP!
               </Text>
             </Flex>
           </Form>

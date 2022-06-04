@@ -19,10 +19,10 @@ const NavigationItems = [
 ];
 
 const NavigationIcons = [
-  <AiOutlineHome size="14px" />,
-  <IoSettingsSharp size="14px" />,
-  <MdPlace size="14px" />,
-  <BsFillBookmarkHeartFill size="14px" />,
+  <AiOutlineHome size="14px" key={0} />,
+  <IoSettingsSharp size="14px" key={1} />,
+  <MdPlace size="14px" key={2} />,
+  <BsFillBookmarkHeartFill size="14px" key={3} />,
   // <AiOutlineSearch size="14px" />,
 ];
 
@@ -53,6 +53,7 @@ export const DashboardLayout = ({ children }: Props) => {
         <UnorderedList listStyleType="none">
           {NavigationItems.map((item, idx) => (
             <ListItem
+              key={idx}
               borderBottom="1px solid rgb(59, 54, 54)"
               pl="15%"
               fontSize="13px"
@@ -69,7 +70,9 @@ export const DashboardLayout = ({ children }: Props) => {
               }}
             >
               {NavigationIcons[idx]}
-              <Link href={`/${item.toLocaleLowerCase()}`}>{item}</Link>
+              <Link key={idx} href={`/${item.toLocaleLowerCase()}`}>
+                {item}
+              </Link>
             </ListItem>
           ))}
         </UnorderedList>

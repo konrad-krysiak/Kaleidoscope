@@ -1,21 +1,14 @@
 import {
   Box,
-  Button,
-  Flex,
-  FormLabel,
   Image,
-  Input,
   Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   useMediaQuery,
-  Text,
 } from "@chakra-ui/react";
-import { ErrorMessage, Form, Formik } from "formik";
 import { useState } from "react";
-import { object, string } from "yup";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 
@@ -50,7 +43,7 @@ export const SignModal = ({ isOpen, onClose, isLogin }: LoginModalProps) => {
             }}
             cursor="pointer"
           >
-            <Image src="/close.svg" width="10px" height="10px" />
+            <Image src="/close.svg" alt="close" width="10px" height="10px" />
           </Box>
           <ModalHeader textAlign="center">
             {isLoginForm ? "Sign in" : "Sign up"}
