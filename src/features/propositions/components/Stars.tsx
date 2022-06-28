@@ -5,7 +5,7 @@ export const Stars = () => {
   return (
     <Flex w="150px" flexDirection="row">
       {[...Array(5)].map((e, i) => (
-        <Image src="/star.svg" w="30px" h="30px" />
+        <Image key={i} src="/star.svg" w="30px" h="30px" />
       ))}
     </Flex>
   );

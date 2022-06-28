@@ -1,7 +1,14 @@
 import { Board } from "@/components/Board";
 import { Footer } from "@/components/LandingFooter";
 import { Navbar } from "@/components/Navbar";
-import { Box, Flex, ListItem, Text, UnorderedList } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  ListItem,
+  Text,
+  UnorderedList,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import { LandingSection } from "../components/LandingSection";
 

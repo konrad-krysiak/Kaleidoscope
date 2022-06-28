@@ -50,7 +50,7 @@ export const SignModal = ({ isOpen, onClose, isLogin }: LoginModalProps) => {
           </ModalHeader>
           <ModalBody>
             {isLoginForm ? (
-              <LoginForm setIsLogin={setIsLoginForm} />
+              <LoginForm onClose={onClose} setIsLogin={setIsLoginForm} />
             ) : (
               <RegisterForm setIsLogin={setIsLoginForm} />
             )}

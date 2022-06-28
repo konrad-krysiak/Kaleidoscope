@@ -1,32 +1,34 @@
 import { Box, Button, Flex, ListItem, UnorderedList } from "@chakra-ui/react";
 import Link from "next/link";
-import { AiOutlineHome } from "react-icons/ai";
+import { AiFillDashboard, AiOutlineHome } from "react-icons/ai";
 import { IoSettingsSharp } from "react-icons/io5";
 import { MdPlace } from "react-icons/md";
-import { BsFillBookmarkHeartFill } from "react-icons/bs";
-import { AiOutlineSearch } from "react-icons/ai";
+import { authService } from "@/services/AuthService";
+import { FaPlaceOfWorship } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const NavigationItems = [
+  "Home",
   "Dashboard",
   "Preferences",
   "Places",
-  "Favourites",
-  // "Search",
+  "Propositions",
 ];
 
 const NavigationIcons = [
   <AiOutlineHome size="14px" key={0} />,
-  <IoSettingsSharp size="14px" key={1} />,
-  <MdPlace size="14px" key={2} />,
-  <BsFillBookmarkHeartFill size="14px" key={3} />,
-  // <AiOutlineSearch size="14px" />,
+  <AiFillDashboard size="14px" key={1} />,
+  <IoSettingsSharp size="14px" key={2} />,
+  <MdPlace size="14px" key={3} />,
+  <FaPlaceOfWorship size="14px" key={4} />,
 ];
 
 export const DashboardLayout = ({ children }: Props) => {
+  const router = useRouter();
   return (
     <Flex>
       <Flex
@@ -70,20 +72,33 @@ export const DashboardLayout = ({ children }: Props) => {
               }}
             >
               {NavigationIcons[idx]}
-              <Link key={idx} href={`/${item.toLocaleLowerCase()}`}>
-                {item}
-              </Link>
+              <Link href={`/${item.toLocaleLowerCase()}`}>{item}</Link>
             </ListItem>
           ))}
         </UnorderedList>
 
         <Flex mt="auto">
-          <Button colorScheme="red" w="100%" borderRadius="none">
+          <Button
+            colorScheme="red"
+            w="100%"
+            borderRadius="none"
+            onClick={() => {
+              authService
+                .logout()
+                .then(() => {
+                  router.push("/");
+                })
+                .catch((e) => {
+                  console.log("error while logging out");
+                  console.log(e);
+                });
+            }}
+          >
             LOG OUT
           </Button>
         </Flex>
       </Flex>
-      <Box w="100%" ml="250px" py="20px">
+      <Box h="100vh" w="100%" ml="250px" position="relative">
         {children}
       </Box>
     </Flex>

@@ -4,9 +4,9 @@ import { DashboardLoading } from "@/components/DashboardLoading";
 import { Footer } from "@/components/LandingFooter";
 import { useIsAuthenticated } from "@/services/AuthService";
 import { Box, Flex } from "@chakra-ui/react";
-import { CityTiles } from "../components/CityTiles";
+import { PlaceTiles } from "../components/PlaceTiles";
 
-export const PlacesView = () => {
+export const PropositionsView = () => {
   const { isAuthenticated, isLoading, isError } = useIsAuthenticated();
   if (isLoading) {
     return <DashboardLoading />;
@@ -23,7 +23,7 @@ export const PlacesView = () => {
     <Box>
       <DashboardLayout>
         <Flex py="50px">
-          <CityTiles />
+          <PlaceTiles />
         </Flex>
         <Footer />
       </DashboardLayout>

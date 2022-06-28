@@ -1,26 +1,27 @@
-import { Box, Flex, Input, Text } from "@chakra-ui/react";
+import { authService } from "@/services/AuthService";
+import { Box, Flex, Input, Text, useDisclosure } from "@chakra-ui/react";
 import { ErrorMessage, Form, Formik } from "formik";
-import { Dispatch, SetStateAction } from "react";
-import { object, ref, string } from "yup";
+import { Dispatch, SetStateAction, useState } from "react";
+import { object, string } from "yup";
 
 interface RegisterFormProps {
   setIsLogin: Dispatch<SetStateAction<boolean>>;
 }
 
 export const RegisterForm = ({ setIsLogin }: RegisterFormProps) => {
+  const [registerStatus, setRegisterStatus] = useState(false);
+  const [registerError, setRegisterError] = useState(false);
   const registerValidationSchema = object({
-    username: string()
-      .required("username is required!")
-      .min(6, "username is too short, should be 6 characters minimum!")
-      .max(15, "username is too long, should be 15 characters maximum!"),
-    email: string().email("Email is not valid!").required("Email is required!"),
-    password: string()
-      .required("password is required!")
-      .min(6, "password is too short, should be 6 characters minimum!")
-      .max(15, "password is too long, should be 15 characters maximum"),
-    repeatPassword: string()
-      .oneOf([ref("password"), null], "Password must match")
-      .required("password confirmation is required!"),
+    name: string().required("This field is required"),
+    surname: string().required("This field is required"),
+    city: string().required("This field is required"),
+    age: string().required("This field is required"),
+    email: string()
+      .email("Email is invalid")
+      .required("This field is required"),
+    password: string().required("This field is required"),
+    languageNative: string().required("This field is required"),
+    languageForeign: string().required("This field is required"),
   });
 
   return (
@@ -28,42 +29,201 @@ export const RegisterForm = ({ setIsLogin }: RegisterFormProps) => {
       <Formik
         enableReinitialize
         initialValues={{
-          username: "",
+          name: "",
+          surname: "",
+          city: "",
+          age: "",
           email: "",
           password: "",
-          repeatPassword: "",
+          languageNative: "",
+          languageForeign: "",
         }}
         validationSchema={registerValidationSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={() => {
-          console.log("register");
+        onSubmit={(values) => {
+          authService
+            .register(
+              values.name,
+              values.surname,
+              values.city,
+              values.languageNative,
+              values.languageForeign,
+              values.age,
+              values.email,
+              values.password
+            )
+            .then((res) => {
+              setRegisterStatus(true);
+              setRegisterError(false);
+            })
+            .catch(() => {
+              console.log("register error");
+              setRegisterError(true);
+            });
         }}
       >
         {({ values, handleChange, handleBlur, errors }) => (
           <Form>
             <Flex direction="column">
+              {registerStatus ? (
+                <Text textAlign="center" color="green">
+                  You have registered successfully!
+                </Text>
+              ) : null}
               <Input
                 type="text"
-                name="username"
-                id="username"
-                value={values.username}
+                name="name"
+                id="name"
+                value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                borderColor={errors.username ? "red" : ""}
-                placeholder="username"
+                borderColor={errors.name ? "red" : ""}
+                placeholder="name"
                 mt="10px"
-                border={errors.username ? "1px solid #9e9e9e" : "none"}
-                borderBottom={`1px solid ${
-                  errors.username ? "red" : "#9e9e9e"
-                }`}
-                borderRadius={errors.username ? "5px" : "none"}
+                border={errors.name ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${errors.name ? "red" : "#9e9e9e"}`}
+                borderRadius={errors.name ? "5px" : "none"}
                 fontSize="14px"
                 transition="0.2s ease"
                 height="40px"
                 _focus={{}}
               />
-              <ErrorMessage name="username">
+              <ErrorMessage name="name">
+                {(msg) => (
+                  <Text color="red" fontSize="12px">
+                    {msg}
+                  </Text>
+                )}
+              </ErrorMessage>
+
+              <Input
+                type="text"
+                name="surname"
+                id="surname"
+                value={values.surname}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                borderColor={errors.surname ? "red" : ""}
+                placeholder="surname"
+                mt="10px"
+                border={errors.surname ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${errors.surname ? "red" : "#9e9e9e"}`}
+                borderRadius={errors.surname ? "5px" : "none"}
+                fontSize="14px"
+                transition="0.2s ease"
+                height="40px"
+                _focus={{}}
+              />
+              <ErrorMessage name="surname">
+                {(msg) => (
+                  <Text color="red" fontSize="12px">
+                    {msg}
+                  </Text>
+                )}
+              </ErrorMessage>
+
+              <Input
+                type="text"
+                name="city"
+                id="city"
+                value={values.city}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                borderColor={errors.city ? "red" : ""}
+                placeholder="city"
+                mt="10px"
+                border={errors.city ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${errors.city ? "red" : "#9e9e9e"}`}
+                borderRadius={errors.city ? "5px" : "none"}
+                fontSize="14px"
+                transition="0.2s ease"
+                height="40px"
+                _focus={{}}
+              />
+              <ErrorMessage name="city">
+                {(msg) => (
+                  <Text color="red" fontSize="12px">
+                    {msg}
+                  </Text>
+                )}
+              </ErrorMessage>
+
+              <Input
+                type="text"
+                name="languageNative"
+                id="languageNative"
+                value={values.languageNative}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                borderColor={errors.languageNative ? "red" : ""}
+                placeholder="languageNative"
+                mt="10px"
+                border={errors.languageNative ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${
+                  errors.languageNative ? "red" : "#9e9e9e"
+                }`}
+                borderRadius={errors.languageNative ? "5px" : "none"}
+                fontSize="14px"
+                transition="0.2s ease"
+                height="40px"
+                _focus={{}}
+              />
+              <ErrorMessage name="languageNative">
+                {(msg) => (
+                  <Text color="red" fontSize="12px">
+                    {msg}
+                  </Text>
+                )}
+              </ErrorMessage>
+
+              <Input
+                type="text"
+                name="languageForeign"
+                id="languageForeign"
+                value={values.languageForeign}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                borderColor={errors.languageForeign ? "red" : ""}
+                placeholder="languageForeign"
+                mt="10px"
+                border={errors.languageForeign ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${
+                  errors.languageForeign ? "red" : "#9e9e9e"
+                }`}
+                borderRadius={errors.languageForeign ? "5px" : "none"}
+                fontSize="14px"
+                transition="0.2s ease"
+                height="40px"
+                _focus={{}}
+              />
+              <ErrorMessage name="languageForeign">
+                {(msg) => (
+                  <Text color="red" fontSize="12px">
+                    {msg}
+                  </Text>
+                )}
+              </ErrorMessage>
+
+              <Input
+                type="text"
+                name="age"
+                id="age"
+                value={values.age}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                borderColor={errors.age ? "red" : ""}
+                placeholder="age"
+                mt="10px"
+                border={errors.age ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${errors.age ? "red" : "#9e9e9e"}`}
+                borderRadius={errors.age ? "5px" : "none"}
+                fontSize="14px"
+                transition="0.2s ease"
+                height="40px"
+                _focus={{}}
+              />
+              <ErrorMessage name="age">
                 {(msg) => (
                   <Text color="red" fontSize="12px">
                     {msg}
@@ -125,33 +285,11 @@ export const RegisterForm = ({ setIsLogin }: RegisterFormProps) => {
                 )}
               </ErrorMessage>
 
-              <Input
-                type="text"
-                name="repeatPassword"
-                id="repeatPassword"
-                value={values.repeatPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                borderColor={errors.repeatPassword ? "red" : ""}
-                placeholder="confirm password"
-                mt="10px"
-                border={errors.repeatPassword ? "1px solid #9e9e9e" : "none"}
-                borderBottom={`1px solid ${
-                  errors.repeatPassword ? "red" : "#9e9e9e"
-                }`}
-                borderRadius={errors.repeatPassword ? "5px" : "none"}
-                fontSize="14px"
-                transition="0.2s ease"
-                height="40px"
-                _focus={{}}
-              />
-              <ErrorMessage name="repeatPassword">
-                {(msg) => (
-                  <Text color="red" fontSize="12px">
-                    {msg}
-                  </Text>
-                )}
-              </ErrorMessage>
+              {registerError ? (
+                <Text textAlign="center" color="red">
+                  Error has occurred.
+                </Text>
+              ) : null}
 
               <Flex alignItems="center" mt="20px" direction="column" gap="3px">
                 <Input

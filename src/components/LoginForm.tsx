@@ -1,34 +1,54 @@
-import { Box, Flex, Input, Text } from "@chakra-ui/react";
+import { authService } from "@/services/AuthService";
+import { Box, Flex, Input, Text, useDisclosure } from "@chakra-ui/react";
 import { ErrorMessage, Form, Formik } from "formik";
-import { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { object, string } from "yup";
+import { AlertDialogComponent } from "./AlertDialogComponent";
 
 interface LoginFormProps {
   setIsLogin: Dispatch<SetStateAction<boolean>>;
+  onClose: () => void; // close login dialog fn
 }
 
-export const LoginForm = ({ setIsLogin }: LoginFormProps) => {
+export const LoginForm = ({ setIsLogin, onClose }: LoginFormProps) => {
+  const {
+    isOpen: isAlertDialogOpen,
+    onOpen: onAlertDialogOpen,
+    onClose: onAlertDialogClose,
+  } = useDisclosure();
+  const router = useRouter();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const loginValidationSchema = object({
-    username: string()
-      .required("username is required!")
-      .min(6, "username is too short, should be 6 characters minimum!")
-      .max(15, "username is too long, should be 15 characters maximum!"),
-    password: string()
-      .required("password is required!")
-      .min(6, "password is too short, should be 6 characters minimum!")
-      .max(15, "password is too long, should be 15 characters maximum"),
+    email: string().required("email is required!"),
+    password: string().required("password is required!"),
   });
 
   return (
     <Box>
       <Formik
         enableReinitialize
-        initialValues={{ username: "", password: "" }}
+        initialValues={{ email: "", password: "" }}
         validationSchema={loginValidationSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={() => {
-          console.log("submit");
+        onSubmit={async (values) => {
+          try {
+            const data = await authService.login(values.email, values.password);
+            if (data.status === "success") {
+              console.log("login success" + data);
+              onClose();
+              router.push("/dashboard");
+            }
+          } catch (e) {
+            console.log("Error while loggin in.");
+            const errMessage = e.response?.data?.detail;
+            setError(true);
+            if (errMessage) {
+              setErrorMessage(errMessage);
+            }
+          }
         }}
       >
         {({ values, handleChange, handleBlur, errors }) => (
@@ -36,25 +56,23 @@ export const LoginForm = ({ setIsLogin }: LoginFormProps) => {
             <Flex direction="column">
               <Input
                 type="text"
-                name="username"
-                id="username"
-                value={values.username}
+                name="email"
+                id="email"
+                value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                borderColor={errors.username ? "red" : ""}
-                placeholder="username"
+                borderColor={errors.email ? "red" : ""}
+                placeholder="email"
                 mt="10px"
-                border={errors.username ? "1px solid #9e9e9e" : "none"}
-                borderBottom={`1px solid ${
-                  errors.username ? "red" : "#9e9e9e"
-                }`}
-                borderRadius={errors.username ? "5px" : "none"}
+                border={errors.email ? "1px solid #9e9e9e" : "none"}
+                borderBottom={`1px solid ${errors.email ? "red" : "#9e9e9e"}`}
+                borderRadius={errors.email ? "5px" : "none"}
                 fontSize="14px"
                 transition="0.2s ease"
                 height="40px"
                 _focus={{}}
               />
-              <ErrorMessage name="username">
+              <ErrorMessage name="email">
                 {(msg) => (
                   <Text color="red" fontSize="12px">
                     {msg}
@@ -90,6 +108,11 @@ export const LoginForm = ({ setIsLogin }: LoginFormProps) => {
                 )}
               </ErrorMessage>
 
+              {error ? (
+                <Text color="red" fontSize="15px" textAlign="center" pt="5px">
+                  {errorMessage ? errorMessage : "Error has occurred!"}
+                </Text>
+              ) : null}
               <Flex alignItems="center" mt="20px" direction="column" gap="3px">
                 <Input
                   value="SIGN IN"
@@ -134,6 +157,13 @@ export const LoginForm = ({ setIsLogin }: LoginFormProps) => {
           </Form>
         )}
       </Formik>
+      <AlertDialogComponent
+        title="Error"
+        message="Some kind of error has occurred. Try again later."
+        isOpen={isAlertDialogOpen}
+        onOpen={onAlertDialogOpen}
+        onClose={onAlertDialogClose}
+      />
     </Box>
   );
 };

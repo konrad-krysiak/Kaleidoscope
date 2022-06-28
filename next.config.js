@@ -9,11 +9,21 @@ const nextConfig = (phase) => ({
         {
           source: "/:path*",
           destination: "https://tk-project.herokuapp.com/:path*", // Proxy to Backend
+          // destination: ""
         },
       ];
     } else {
       return [];
     }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+    ]
   },
 });
 
