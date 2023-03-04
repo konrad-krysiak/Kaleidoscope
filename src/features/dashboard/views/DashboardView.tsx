@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import { Audio } from "react-loader-spinner";
 
 export const DashboardView = () => {
-  const { isAuthenticated, isLoading, isError } = useIsAuthenticated();
+  // const { isAuthenticated, isLoading, isError } = useIsAuthenticated();
+  const isAuthenticated = true;
+  const isLoading = false;
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
